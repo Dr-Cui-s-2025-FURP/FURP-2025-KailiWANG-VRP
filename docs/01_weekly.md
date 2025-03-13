@@ -8,7 +8,7 @@ Week 1: Formulate time-energy joint cost function
             
             (1)Drone: The flight time can be calculated by the relationship between the flight distance and the flight speed.
                 
-                ![1](./images/1.jpg)
+                ![1](./images/1.jpg "1")
             
             Plus: Drone flight time may be affected by flight altitude, wind speed and other external environmental factors.
 
