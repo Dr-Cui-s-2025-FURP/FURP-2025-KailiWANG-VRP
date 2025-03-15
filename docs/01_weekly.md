@@ -272,7 +272,7 @@ The first figure shows the goal allocation of drones and UAVs after changing the
 
 
 The second figure demonstrates the total cost increases as the number of targets increases. 
-![line chart](./images/Line%20Chart.png)
+![line chart](./images/Line%20chart.png)
 
 Key findings
 
