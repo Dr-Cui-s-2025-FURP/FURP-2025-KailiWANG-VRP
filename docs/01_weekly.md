@@ -265,3 +265,23 @@ for j in range(len(distance_vehicle)):
 </pre>
 
 The core of this code is to solve the hybrid drone-autonomous driving VRP problem and minimize the time and energy cost. You can adjust alpha and beta or the number of targets to change the focus of the optimization target, and the selection results and total cost will also be different.
+
+
+The first figure shows the goal allocation of drones and UAVs after changing the original time and energy weights of 0.5 to 0.7 and 0.3 respectively.
+![column chart](./images/Column%20Chart.png)
+
+
+The second figure demonstrates the total cost increases as the number of targets increases. 
+![line chart](./images/Line%20Chart.png)
+
+Key findings
+
+(1) The more tasks there are, the higher the total cost will be, but the growth rate may not be completely linear due to factors such as path optimization and resource scheduling.
+
+(2) The weight adjustment of time (alpha) and energy (beta) will affect the scheduling decision, for example:
+
+1. The increase of alpha (time is more important) → vehicles take on tasks first (due to high speed).
+
+2. The increase of beta (energy is more important) → drones participate more (due to energy saving).
+
+The MILP solution can dynamically allocate tasks to ensure the optimal cost.
