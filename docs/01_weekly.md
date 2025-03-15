@@ -122,13 +122,146 @@ Total_Energy is calculated by energy consumption.
 
 <span style="font-size:18px;">Specific code function analysis: </span>
 
-   <pre>
-<code class="language-python">
-# 这是一个 Python 代码示例
-def hello_world():
-    print("Hello, World!")
+1. First import the required libraries   
 
-hello_world()
+<pre>
+<code class="language-python">
+!pip install pulp  
+import pulp  
+import numpy as np
+
 </code>
 </pre>
-                 
+
+pulp: An optimization library for solving linear programming (LP) and integer linear programming (MILP) problems.
+
+2. Next, define the parameters of the drone and autonomous vehicle：
+
+<pre>
+<code class="language-python">
+drone_speed = 10  # velocity of drone (km/h)
+vehicle_speed = 30  # velocity of autonomous vehicle (km/h)
+drone_power = 50  # Drone power consumption (watts)
+vehicle_efficiency = 0.2  # Fuel efficiency of autonomous vehicles (L/km)
+fuel_eff = 1  # Assumed fuel consumption (unit: L/km)
+distance_drone = [10, 20, 15]  # Distance flown by the drone (in kilometers)
+distance_vehicle = [5, 10, 12]  # Distance travelled by car (in kilometers)
+
+</code>
+</pre>
+
+（1）Speed: Drones are slower (10 km/h), autonomous vehicles are faster (30 km/h).
+
+（2）Energy consumption: Drones calculate energy consumption based on power × time (Watt-hours).
+Vehicles calculate energy consumption based on fuel efficiency × distance (liters/L).
+
+（3）Mission: Drones and vehicles each have 3 optional paths.
+
+
+3. Calculate time cost
+
+<pre>
+<code class="language-python">
+time_drone = [d / drone_speed for d in distance_drone]  # flight time of drone
+time_vehicle = [d / vehicle_speed for d in distance_vehicle]  # travel time of UAVs
+</code>
+</pre>
+
+4. Calculating energy consumption
+
+<pre>
+<code class="language-python">
+energy_drone = [drone_power * t for t in time_drone]  # energy consumption of drone（Watt-hour）
+energy_vehicle = [d * vehicle_efficiency for d in distance_vehicle]  # energy consumption of UAVs（L）
+
+</code>
+</pre>
+
+5. Creating a MILP Planning Problem
+
+<pre>
+<code class="language-python">
+model = pulp.LpProblem("Vehicle_Routing_Problem", pulp.LpMinimize)
+</code>
+</pre>
+
+The goal is to minimize the time-energy cost, so set LpMinimize
+
+6. Defining decision variables
+
+<pre>
+<code class="language-python">
+x = pulp.LpVariable.dicts("drone", range(len(distance_drone)), cat="Binary")
+y = pulp.LpVariable.dicts("vehicle", range(len(distance_vehicle)), cat="Binary")
+
+</code>
+</pre>
+
+(1) x[i]: If the drone selects the i-th path, then x[i] = 1, otherwise x[i] = 0.
+
+(2) y[j]: If the vehicle selects the j-th path, then y[j] = 1, otherwise y[j] = 0.
+
+(3) Binary variable (cat="Binary"), meaning that each path can only be selected or not.
+
+7. Setting the objective function
+
+<pre>
+<code class="language-python">
+alpha = 0.5  # weight of time
+beta = 0.5  # weight of energy
+total_time = pulp.lpSum([x[i] * time_drone[i] for i in range(len(distance_drone))])
+total_energy = pulp.lpSum([x[i] * energy_drone[i] for i in range(len(distance_drone))])
+total_vehicle_time = pulp.lpSum([y[j] * time_vehicle[j] for j in range(len(distance_vehicle))])
+total_vehicle_energy = pulp.lpSum([y[j] * energy_vehicle[j] for j in range(len(distance_vehicle))])
+
+model += alpha * (total_time + total_vehicle_time) + beta * (total_energy + total_vehicle_energy), "Total_Cost"
+</code>
+</pre>
+
+(1) total_time: the time taken by all selected paths.
+
+(2) total_energy: the energy consumption of all selected paths.
+
+(3) $\alpha$ and $\beta$ control the weights of time and energy consumption.
+
+Objective function: 
+$ \min \left( \alpha \sum_{i} x_i t_{\text{drone},i} + \beta \sum_{i} x_i E_{\text{drone},i} + \alpha \sum_{j} y_j t_{\text{vehicle},j} + \beta \sum_{j} y_j E_{\text{vehicle},j} \right) $
+
+8. Setting constraints
+
+<pre>
+<code class="language-python">
+for i in range(len(distance_drone)):
+    model += x[i] <= 1, f"Drone_Path_Constraint_{i}"
+
+for j in range(len(distance_vehicle)):
+    model += y[j] <= 1, f"Vehicle_Path_Constraint_{j}"
+
+model += pulp.lpSum([x[i] for i in range(len(distance_drone))]) + pulp.lpSum([y[j] for j in range(len(distance_vehicle))]) == 1, "Task_Assignment"
+
+</code>
+</pre>
+
+Each task can only be executed by one drone or one car at most.
+
+pulp.lpSum(x) + pulp.lpSum(y) == 1 ensures that all tasks must be executed.
+
+9. Solve and output the results
+
+<pre>
+<code class="language-python">
+model.solve()
+
+print("Status:", pulp.LpStatus[model.status])
+print("Total cost: ", pulp.value(model.objective))
+
+for i in range(len(distance_drone)):
+    print(f"Whether the drone uses path {i}: {x[i].varValue}")
+
+for j in range(len(distance_vehicle)):
+    print(f"Whether the car uses the road {j}: {y[j].varValue}")
+
+</code>
+</pre>
+
+The core of this code is to solve the hybrid drone-autonomous driving VRP problem and minimize the time and energy cost. You can adjust alpha and beta or the number of targets to change the focus of the optimization target, and the selection results and total cost will also be different.
