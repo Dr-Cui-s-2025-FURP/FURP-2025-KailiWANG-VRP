@@ -1,6 +1,6 @@
-<span style="font-size:20px;">Week 2: Model UAV range constraints with wind effects</span>
+# Week 2: Model UAV range constraints with wind effects
 
-<span style="font-size:18px;">Outline</span>:    Wind speed significantly impacts the maximum range of the UAV by altering its aerodynamic performance and energy consumption. The goal of this week is to necessitate the development of a dynamic model that accounts for variable wind conditions, including headwinds, tailwinds, and crosswinds, to accurately predict and optimize flight parameters such as speed, altitude, and power usage in real-time.
+## Outline: Wind speed significantly impacts the maximum range of the UAV by altering its aerodynamic performance and energy consumption. The goal of this week is to necessitate the development of a dynamic model that accounts for variable wind conditions, including headwinds, tailwinds, and crosswinds, to accurately predict and optimize flight parameters such as speed, altitude, and power usage in real-time.
 
 ### Step 1: Choosing a suitable modeling method.
 
