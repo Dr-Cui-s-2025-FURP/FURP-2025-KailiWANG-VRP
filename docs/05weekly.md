@@ -1,4 +1,4 @@
-# Creating a genetic algorithm using domain-specific operators
+# Week 5: Creating a genetic algorithm using domain-specific operators
 
 ## Outline
 As a meta-heuristic optimization method that simulates the biological evolution process, genetic algorithms have shown significant advantages in the field of combinatorial optimization by realizing intelligent search of solution space through operations such as selection, crossover and mutation. However, when faced with the complex optimization problem of truck-UAV collaborative path planning with multimodal constraints, the standard operators of traditional genetic algorithms have significant limitations: on the one hand, the characteristics of practical problems such as UAV endurance constraints and vehicle capacity restrictions require special chromosome encoding methods; on the other hand, the spatiotemporal coordination requirements of trucks and UAVs make it difficult for conventional crossover and mutation operations to maintain the effectiveness of the solution. To this end, this study proposes a domain-customized genetic algorithm for heterogeneous fleet collaborative delivery. Its core innovations are: 1. designing a hierarchical chromosome structure to simultaneously characterize truck paths and UAV task allocation; 2. developing an energy-aware collaborative crossover operator to ensure that UAV tasks do not violate battery constraints; 3. introducing a dynamic handover point optimization mutation strategy to improve the spatiotemporal coordination of the solution. Through this domain-specific genetic operation design, the algorithm can explore the solution space more efficiently, achieve multi-objective optimization of transportation cost, energy consumption and time efficiency, and provide a new optimization paradigm for last-mile logistics.
@@ -158,6 +158,11 @@ def genetic_algorithm():
 
 #### The results of the genetic algorithm are as follows:
 
+![Gene1](./images/Gene1.png)
+![Gene2](./images/Gene2.png)
+![Gene3](./images/Gene3.png)
+![Gene4](./images/Gene4.png)
+![Gene5](./images/Gene5.png)
 - Best solution: The optimal path that the genetic algorithm finally converges to is [7, 2, 5, 3, 0, 8, 9, 6, 1, 4].
 
 - Cost function value: The total cost of the optimal solution is about 364.81.
